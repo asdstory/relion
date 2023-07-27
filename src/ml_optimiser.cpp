@@ -209,8 +209,12 @@ void MlOptimiser::parseContinue(int argc, char **argv)
 	if (fnt != "OLD")
 		fn_mask2 = fnt;
 
+	// Write_every_iter
+	write_every_iter = textToInteger(parser.getOption("--write_iter", "Write out model every so many iterations (default is writing out all iters)", "1"));
+	
 	// These are still experimental; so not in the optimiser.star yet.
 	fn_lowpass_mask = parser.getOption("--lowpass_mask", "User-provided mask for low-pass filtering", "None");
+	fn_lowpass_mask_micelle = parser.getOption("--lowpass_mask_micelle", "User-provided micelle mask for low-pass filtering", "None");
 	lowpass = textToFloat(parser.getOption("--lowpass", "User-provided cutoff for region specified above", "0"));
 
 	// Check whether tau2-spectrum has changed
