@@ -1,4 +1,4 @@
-RELION 4.0.1
+RELION 4.0.1 with support for composite masks
 ============
 
 RELION (for REgularised LIkelihood OptimisatioN) is a stand-alone computer
@@ -80,7 +80,16 @@ make install # Only when you have specified CMAKE_INSTALL_PREFIX in the cmake st
 
 If something went wrong, remove the `build` directory and try again from `cmake`.
 
-
 ## Class Ranker
 The default model for the class ranker has been trained and tested in Python 3.9.12 with Pytorch 1.10.0 and Numpy 1.20.0.
 If you wish to retrain the class ranker model with your own data, please refer to [this repo](https://github.com/3dem/relion-classranker).
+
+## How to use composite masks
+Add these additional arguments to relion_refine for 3D classification or 3D auto-refine:
+
+--solvent_mask path_to_the_protein_mask --lowpass_mask_micelle path_to_the_mask_of_the_whole_particle_including_the_micelle --lowpass 20
+
+
+
+
+
