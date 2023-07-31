@@ -5110,7 +5110,7 @@ void MlOptimiser::solventFlatten()
 		return;
 
 	// First read solvent mask from disc, or pre-calculate it
-	Image<RFLOAT> Isolvent, Isolvent2, Ilowpass;
+	Image<RFLOAT> Isolvent, Isolvent2, Ilowpass, Ilowpass_micelle;
 	Isolvent().resize(mymodel.Iref[0]);
 	Isolvent().setXmippOrigin();
 	Isolvent().initZeros();
@@ -5178,6 +5178,15 @@ void MlOptimiser::solventFlatten()
 		Ilowpass().setXmippOrigin();
 		if (!Ilowpass().sameShape(Isolvent()))
 			REPORT_ERROR("MlOptimiser::solventFlatten ERROR: second solvent mask is of incorrect size.");
+	}
+
+	//Also read a lowpass micelle mask if necessary
+	if (fn_lowpass_mask_micelle != "None")
+	{
+		Ilowpass_micelle.read(fn_lowpass_mask_micelle);
+		Ilowpass_micelle().setXmippOrigin();
+		if (!Ilowpass_micelle().sameShape(Isolvent()))
+			REPORT_ERROR("MlOptimiser::solventFlatten ERROR: lowpass micelle mask is of incorrect size.");
 	}
 
 	for (int iclass = 0; iclass < mymodel.nr_classes; iclass++)
