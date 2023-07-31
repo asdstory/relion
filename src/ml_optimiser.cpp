@@ -2170,6 +2170,7 @@ void MlOptimiser::initialiseGeneral(int rank)
 	// Check mask angpix, boxsize and [0,1] compliance right away.
 	if (fn_mask != "None") checkMask(fn_mask, 1, rank);
 	if (fn_mask2 != "None") checkMask(fn_mask2, 2, rank);
+	if (fn_lowpass_mask_micelle != "None") checkMask(fn_lowpass_mask_micelle, 3, rank);
 
 	// Write out unmasked 2D class averages
 	do_write_unmasked_refs = (mymodel.ref_dim == 2 && !gradient_refine);
