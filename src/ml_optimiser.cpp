@@ -5201,8 +5201,24 @@ void MlOptimiser::solventFlatten()
 
 		// Then apply the expanded solvent mask to the map
 //		mymodel.Iref[iclass] *= Isolvent(); // this is the tight mask
+		if (fn_lowpass_mask_micelle != "None")
+		{
+			Itmp_micelle = mymodel.Iref[iclass];
+			lowPassFilterMap(Itmp_micelle, lowpass, mymodel.pixel_size);
+			Itmp_micelle *= Ilowpass_micelle();
+			RFLOAT solv;
+			FOR_ALL_DIRECT_ELEMENTS_IN_ARRAY3D(Isolvent())
+			{
+				solv = DIRECT_A3D_ELEM(Isolvent(), k, i, j);
+				DIRECT_A3D_ELEM(mymodel.Iref[iclass], k, i, j) = solv * DIRECT_A3D_ELEM(mymodel.Iref[iclass], k, i, j) + (1. - solv) * DIRECT_A3D_ELEM(Itmp_micelle, k, i, j);
+			}
+		}
+		else
+		{
+			// Then apply the expanded solvent mask to the map
+			mymodel.Iref[iclass] *= Isolvent; // This is the tight mask
+		}
 		
-
 		if (fn_lowpass_mask != "None")
 			mymodel.Iref[iclass] += Itmp;
 
