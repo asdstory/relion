@@ -578,6 +578,7 @@ void MlOptimiser::parseInitial(int argc, char **argv)
 	fn_local_symmetry = parser.getOption("--local_symmetry", "Local symmetry description file containing list of masks and their operators", "None");
 	do_split_random_halves = parser.checkOption("--split_random_halves", "Refine two random halves of the data completely separately");
 	low_resol_join_halves = textToFloat(parser.getOption("--low_resol_join_halves", "Resolution (in Angstrom) up to which the two random half-reconstructions will not be independent to prevent diverging orientations","-1"));
+	write_every_iter = textToInteger(parser.getOption("--write_iter", "Write out model every so many iterations (default is writing out all iterations)", "1"));
 	do_center_classes = parser.checkOption("--center_classes", "Re-center classes based on their center-of-mass?");
 
 	// Initialisation
@@ -825,6 +826,8 @@ void MlOptimiser::parseInitial(int argc, char **argv)
 	do_reuse_scratch = parser.checkOption("--reuse_scratch", "Re-use data on scratchdir, instead of wiping it and re-copying all data.");
 	keep_scratch = parser.checkOption("--keep_scratch", "Don't remove scratch after convergence. Following jobs that use EXACTLY the same particles should use --reuse_scratch.");
 	do_fast_subsets = parser.checkOption("--fast_subsets", "Use faster optimisation by using subsets of the data in the first 15 iterations");
+	fast_subsets_min_parts_per_class = testToInteger(parser.getOption("--fast_subsets_min_parts_per_class", "Minimal particles per class when using faster optimisation", "0"));
+	
 #ifdef ALTCPU
 	do_cpu = parser.checkOption("--cpu", "Use intel vectorisation implementation for CPU");
 #else
