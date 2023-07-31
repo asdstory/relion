@@ -5191,7 +5191,7 @@ void MlOptimiser::solventFlatten()
 
 	for (int iclass = 0; iclass < mymodel.nr_classes; iclass++)
 	{
-		MultidimArray<RFLOAT> Itmp;
+		MultidimArray<RFLOAT> Itmp, Itmp_micelle;
 		if (fn_lowpass_mask != "None")
 		{
 			Itmp = mymodel.Iref[iclass];
@@ -5200,7 +5200,8 @@ void MlOptimiser::solventFlatten()
 		}
 
 		// Then apply the expanded solvent mask to the map
-		mymodel.Iref[iclass] *= Isolvent(); // this is the tight mask
+//		mymodel.Iref[iclass] *= Isolvent(); // this is the tight mask
+		
 
 		if (fn_lowpass_mask != "None")
 			mymodel.Iref[iclass] += Itmp;
