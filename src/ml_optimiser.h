@@ -330,7 +330,11 @@ public:
 
 	// Mask for regions to be low-pass filtered
 	FileName fn_lowpass_mask;
+	FileName fn_lowpass_mask_micelle;
 	RFLOAT lowpass;
+
+	// Write out modle every xxx interations.
+	int write_every_iter;
 
 	// Width of the soft-edges of the circular masks
 	int width_mask_edge;
@@ -434,6 +438,7 @@ public:
 
 	// Use subsets like in cisTEM to speed up 2D/3D classification
 	bool do_fast_subsets;
+	long int fast_subsets_min_parts_per_class;
 
 	// Available memory (in Gigabyte)
 	size_t available_gpu_memory;
