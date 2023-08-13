@@ -572,7 +572,7 @@ void MlOptimiser::parseInitial(int argc, char **argv)
 	fn_mask = parser.getOption("--solvent_mask", "User-provided mask for the references (default is to use spherical mask with particle_diameter)", "None");
 	fn_mask2 = parser.getOption("--solvent_mask2", "User-provided secondary mask (with its own average density)", "None");
 	fn_lowpass_mask = parser.getOption("--lowpass_mask", "User-provided mask for low-pass filtering", "None");
-	fn_lowpass_mask_micelle = parser.getOption("--lowpass_)mask_micelle", "User-provided micelle mask for low-pass filtering", "None");
+	fn_lowpass_mask_micelle = parser.getOption("--lowpass_mask_micelle", "User-provided micelle mask for low-pass filtering", "None");
 	lowpass = textToFloat(parser.getOption("--lowpass", "User-provided cutoff for region specified above", "0"));
 	fn_tau = parser.getOption("--tau", "STAR file with input tau2-spectrum (to be kept constant)", "None");
 	fn_local_symmetry = parser.getOption("--local_symmetry", "Local symmetry description file containing list of masks and their operators", "None");
