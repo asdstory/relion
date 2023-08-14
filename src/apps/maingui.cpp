@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 		if (checkParameter(argc, argv, "--help"))
 		{
 			std::cerr << " [--refresh 2]  : refresh rate in seconds" << std::endl;
-			std::cerr << " [--idle 3600]  : quit GUI after this many second" << std::endl;
+			std::cerr << " [--idle 360000]  : quit GUI after this many second" << std::endl;
 			std::cerr << " [--readonly]   : limited version of GUI that does not touch any files" << std::endl;
 			std::cerr << " [--tomo]       : show tomography-specific GUI" << std::endl;
 			std::cerr << " [--ccpem]      : use the ccpem pipeliner" << std::endl;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 		}
 		FileName fn_pipe = getParameter(argc, argv, "--pipeline", "default");
 		int _update_every_sec = textToInteger(getParameter(argc, argv, "--refresh", "2"));
-		int _exit_after_sec = textToInteger(getParameter(argc, argv, "--idle", "3600"));
+		int _exit_after_sec = textToInteger(getParameter(argc, argv, "--idle", "360000"));
 		bool _do_read_only = checkParameter(argc, argv, "--readonly");
 		bool _do_tomo = checkParameter(argc, argv, "--tomo");
 		bool _use_ccpem_pipeliner = checkParameter(argc, argv, "--ccpem");
