@@ -9602,7 +9602,7 @@ void MlOptimiser::updateSubsetSize(bool myverb)
 	if (do_fast_subsets)
 	{
 		long int min_parts_per_class = (mymodel.ref_dim == 2) ? 100 : 1500;
-		if (fast_substes_min_parts_per_class > 0) min_parts_per_class = fast_substes_min_parts_per_class;
+		if (fast_subsets_min_parts_per_class > 0) min_parts_per_class = fast_subsets_min_parts_per_class;
 		if (iter <= 5)
 		{
 			subset_size = min_parts_per_class*mymodel.nr_classes;
