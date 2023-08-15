@@ -826,7 +826,7 @@ void MlOptimiser::parseInitial(int argc, char **argv)
 	do_reuse_scratch = parser.checkOption("--reuse_scratch", "Re-use data on scratchdir, instead of wiping it and re-copying all data.");
 	keep_scratch = parser.checkOption("--keep_scratch", "Don't remove scratch after convergence. Following jobs that use EXACTLY the same particles should use --reuse_scratch.");
 	do_fast_subsets = parser.checkOption("--fast_subsets", "Use faster optimisation by using subsets of the data in the first 15 iterations");
-	fast_subsets_min_parts_per_class = testToInteger(parser.getOption("--fast_subsets_min_parts_per_class", "Minimal particles per class when using faster optimisation", "0"));
+	fast_subsets_min_parts_per_class = textToInteger(parser.getOption("--fast_subsets_min_parts_per_class", "Minimal particles per class when using faster optimisation", "0"));
 	
 #ifdef ALTCPU
 	do_cpu = parser.checkOption("--cpu", "Use intel vectorisation implementation for CPU");
