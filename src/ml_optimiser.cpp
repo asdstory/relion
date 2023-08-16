@@ -5216,7 +5216,7 @@ void MlOptimiser::solventFlatten()
 		else
 		{
 			// Then apply the expanded solvent mask to the map
-			mymodel.Iref[iclass] *= Isolvent; // This is the tight mask
+			mymodel.Iref[iclass] *= Isolvent(); // This is the tight mask
 		}
 		
 		if (fn_lowpass_mask != "None")
