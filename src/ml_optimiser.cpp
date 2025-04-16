@@ -229,8 +229,12 @@ void MlOptimiser::parseContinue(int argc, char **argv)
     if (fnt != "OLD")
         fn_mask2 = fnt;
 
+    //Write_every_iter
+    write_every_iter = textToInteger(parser.getOption("--write_iter","Write out model every so many iterations (default is writing out all iters)","1")) 
+	
     // These are still experimental; so not in the optimiser.star yet.
     fn_lowpass_mask = parser.getOption("--lowpass_mask", "User-provided mask for low-pass filtering", "None");
+    fn_lowpass_mask_composite = parser.getOption("--lowpass_mask_composite","User-provided mask for composite low-pass filtering","None");
     lowpass = textToFloat(parser.getOption("--lowpass", "User-provided cutoff for region specified above", "0"));
 
     // Check whether tau2-spectrum has changed
@@ -356,7 +360,7 @@ void MlOptimiser::parseContinue(int argc, char **argv)
             sampling.offset_step *= mymodel.pixel_size; // sampling.offset_step is in Angstroms, but command line in pixels!
         }
     }
-
+	
     fnt = parser.getOption("--auto_local_healpix_order", "Minimum healpix order (before oversampling) from which auto-refine procedure will use local searches", "OLD");
     if (fnt != "OLD")
         autosampling_hporder_local_searches = textToInteger(fnt);
@@ -555,7 +559,8 @@ void MlOptimiser::parseContinue(int argc, char **argv)
         strict_highres_exp = textToFloat(fnt);
 
     do_trust_ref_size = parser.checkOption("--trust_ref_size", "Trust the pixel and box size of the input reference; by default the program will die if these are different from the first optics group of the data");
-
+    fast_subsets_min_parts_per_class = textToInteger(parser.getOption("--fast_subsets_min_parts_per_class","Minimal particles per calss when using faster optimization","0"));
+	
     // Debugging/analysis/hidden stuff
     do_map = !checkParameter(argc, argv, "--no_map");
     minres_map = textToInteger(getParameter(argc, argv, "--minres_map", "5"));
@@ -643,11 +648,13 @@ void MlOptimiser::parseInitial(int argc, char **argv)
     fn_mask = parser.getOption("--solvent_mask", "User-provided mask for the references (default is to use spherical mask with particle_diameter)", "None");
     fn_mask2 = parser.getOption("--solvent_mask2", "User-provided secondary mask (with its own average density)", "None");
     fn_lowpass_mask = parser.getOption("--lowpass_mask", "User-provided mask for low-pass filtering", "None");
+    fn_lowpass_mask_composite = parser.getOption("--lowpass_mask_composite","User-provided mask for composite low-pass filtering","None");
     lowpass = textToFloat(parser.getOption("--lowpass", "User-provided cutoff for region specified above", "0"));
     fn_tau = parser.getOption("--tau", "STAR file with input tau2-spectrum (to be kept constant)", "None");
     fn_local_symmetry = parser.getOption("--local_symmetry", "Local symmetry description file containing list of masks and their operators", "None");
     do_split_random_halves = parser.checkOption("--split_random_halves", "Refine two random halves of the data completely separately");
     low_resol_join_halves = textToFloat(parser.getOption("--low_resol_join_halves", "Resolution (in Angstrom) up to which the two random half-reconstructions will not be independent to prevent diverging orientations","-1"));
+    write_every_iter = textToInteger(parser.getOption("--write_iter","Write out model every so many iterations (default is writing out all iters)","1"));
     do_center_classes = parser.checkOption("--center_classes", "Re-center classes based on their center-of-mass?");
 
     // Initialisation
@@ -903,6 +910,7 @@ void MlOptimiser::parseInitial(int argc, char **argv)
     do_reuse_scratch = parser.checkOption("--reuse_scratch", "Re-use data on scratchdir, instead of wiping it and re-copying all data.");
     keep_scratch = parser.checkOption("--keep_scratch", "Don't remove scratch after convergence. Following jobs that use EXACTLY the same particles should use --reuse_scratch.");
     do_fast_subsets = parser.checkOption("--fast_subsets", "Use faster optimisation by using subsets of the data in the first 15 iterations");
+    fast_subsets_min_parts_per_class = textToInteger(parser.getOption("--fast_subsets_min_parts_per_class","Minimal particles per class when using faster optimization","0"));
 #ifdef ALTCPU
     do_cpu = parser.checkOption("--cpu", "Use intel vectorisation implementation for CPU");
 #else
@@ -1352,7 +1360,8 @@ void MlOptimiser::read(FileName fn_in, int rank, bool do_prevent_preread)
 
 void MlOptimiser::write(bool do_write_sampling, bool do_write_data, bool do_write_optimiser, bool do_write_model, int random_subset)
 {
-    if (do_grad && subset_size > 0 && (iter % write_every_grad_iter) != 0 && iter != nr_iter)
+//    if (do_grad && subset_size > 0 && (iter % write_every_grad_iter) != 0 && iter != nr_iter)
+    if (do_grad && subset_size > 0 && (iter % write_every_grad_iter) != 0 || (iter > -1 && (iter % write_every_iter) != 0) && iter != nr_iter)
         return;
 
     FileName fn_root, fn_tmp, fn_model, fn_model2, fn_data, fn_sampling, fn_root2;
@@ -2489,6 +2498,7 @@ void MlOptimiser::initialiseGeneral(int rank)
     // Check mask angpix, boxsize and [0,1] compliance right away.
     if (fn_mask != "None") checkMask(fn_mask, 1, rank);
     if (fn_mask2 != "None") checkMask(fn_mask2, 2, rank);
+    if (fn_lowpass_mask_composite != "None") checkMask(fn_lowpass_mask_composite, 3, rank);
 
     // Write out unmasked 2D class averages
     do_write_unmasked_refs = (mymodel.ref_dim == 2 && !gradient_refine);
@@ -5471,7 +5481,7 @@ void MlOptimiser::solventFlatten()
         return;
 
     // First read solvent mask from disc, or pre-calculate it
-    Image<RFLOAT> Isolvent, Isolvent2, Ilowpass;
+    Image<RFLOAT> Isolvent, Isolvent2, Ilowpass, Ilowpass_composite;
     Isolvent().resize(mymodel.Iref[0]);
     Isolvent().setXmippOrigin();
     Isolvent().initZeros();
@@ -5541,6 +5551,15 @@ void MlOptimiser::solventFlatten()
             REPORT_ERROR("MlOptimiser::solventFlatten ERROR: second solvent mask is of incorrect size.");
     }
 
+    // Also read a composite lowpass mask if necessary
+    if (fn_lowpass_mask_composite != "None")
+    {
+	Ilowpass_composite.read(fn_lowpass_mask_composite); 
+	Ilowpass_composite().setXmippOrigin();
+	if (!Ilowpass_composite().sameShape(Isolvent()))
+	    REPORT_ERROR("MlOptimiser::solventFlatten ERROR: composite lowpass mask is of incorrect size.");
+    }
+	
     for (int iclass = 0; iclass < mymodel.nr_classes; iclass++)
     {
         MultidimArray<RFLOAT> Itmp;
