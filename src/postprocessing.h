@@ -50,7 +50,7 @@ public:
 	MetaDataTable optimisationSet;
 
 	// Images for the two half-reconstructions and the mask
-	Image<RFLOAT> I1, I2, Im,I1_rescaled;
+	Image<RFLOAT> I1, I2, Im, I1_rescaled;
 
 	// Pixel size in Angstroms
 	RFLOAT angpix, mtf_angpix, requested_angpix;
