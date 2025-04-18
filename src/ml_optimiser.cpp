@@ -5562,16 +5562,31 @@ void MlOptimiser::solventFlatten()
 	
     for (int iclass = 0; iclass < mymodel.nr_classes; iclass++)
     {
-        MultidimArray<RFLOAT> Itmp;
+        MultidimArray<RFLOAT> Itmp, Itmp_composite;
         if (fn_lowpass_mask != "None")
         {
             Itmp = mymodel.Iref[iclass];
             Itmp *= Ilowpass();
             lowPassFilterMap(Itmp, lowpass, mymodel.pixel_size);
         }
-
-        // Then apply the expanded solvent mask to the map
-        mymodel.Iref[iclass] *= Isolvent(); // this is the tight mask
+        if (fn_lowpass_mask_composite != "None" && lowpass >0.)
+	{
+	    Itmp_composite = mymodel.Iref[iclass];
+	    lowPassFilterMap(Itmp_composite, lowpass, mymodel.pixel_size);
+	    Itmp_composite *= Ilowpass_composite();
+	    RFLOAT solv;
+	    FOR_ALL_DIRECT_ELEMENTS_IN_ARRAY3D(Isolvent())
+	    {
+		solv = DIRECT_A3D_ELEM(Isolvent(), k, i, j);
+		DIRECT_A3D_ELEM(mymodel.Iref[iclass], k, i, j) = solv * DIRECT_A3D_ELEM(mymodel.Iref[iclass], k, i, j) + (1. - solv) * DIRECT_A3D_ELEM(Itmp_composite, k, i, j);		    
+	    }
+	}
+	else
+	{
+	    // Then apply the expanded solvent mask to the map
+            mymodel.Iref[iclass] *= Isolvent(); // this is the tight mask
+	}
+      
 
         if (fn_lowpass_mask != "None")
             mymodel.Iref[iclass] += Itmp;
@@ -9982,6 +9997,7 @@ void MlOptimiser::updateSubsetSize(bool myverb)
     if (do_fast_subsets)
     {
         long int min_parts_per_class = (mymodel.ref_dim == 2) ? 100 : 1500;
+	if (fast_subsets_min_parts_per_class > 0) min_parts_per_class = fast_subsets_min_parts_per_class;
         if (iter <= 5)
         {
             subset_size = min_parts_per_class*mymodel.nr_classes;
