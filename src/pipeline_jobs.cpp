@@ -4519,8 +4519,20 @@ bool RelionJob::getCommandsAutorefineJob(std::string &outputname, std::vector<st
 	}
 	if (joboptions["fn_mask"].getString().length() > 0)
 	{
-		command += " --solvent_mask " + joboptions["fn_mask"].getString();
-
+                if (joboptions["fn_protein_mask"].getString().length() > 0 && joboptions["low_pass_composite"].getNumber(error_message) > 0)
+                {
+                    // Use the protein mask as the solvent mask.
+                    command += " --solvent_mask " + joboptions["fn_protein_mask"].getString();
+                    command += " --lowpass_mask_composite " + joboptions["fn_mask"].getString();
+                    command += " --lowpass " + joboptions["low_pass_composite"].getString();
+		    Node node(joboptions["fn_protein_mask"].getString(), joboptions["fn_protein_mask"].node_type);
+		    inputNodes.push_back(node);
+		}
+                else
+                {
+                    command += " --solvent_mask " + joboptions["fn_mask"].getString();
+		}
+		
 		if (joboptions["do_solvent_fsc"].getBoolean())
 			command += " --solvent_correct_fsc ";
 
