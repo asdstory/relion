@@ -568,7 +568,7 @@ RFLOAT Postprocessing::sharpenMap()
 		MultidimArray<Complex > FT2;
 		windowFourierTransform(FT, FT2, newsize);
 		I1_rescaled().resize(newsize, newsize, newsize);
-		transformer.inverseFourierTransform(Ft2, I1_rescaled());
+		transformer.inverseFourierTransform(FT2, I1_rescaled());
 	}
 	
 	transformer.inverseFourierTransform(FT, I1());
@@ -960,7 +960,7 @@ void Postprocessing::writeMaps(FileName fn_root) {
 		I1_rescaled.setSamplingRateInHeader(requested_angpix);
 		fn_tmp = fn_root + "_rescaled.mrc";
 		I1_rescaled.write(fn_tmp);
-		std::cout.width(35); std::cout << std::left << " + Rescaled processed map: "; std::cout << fn_tmp << std:endl;
+		std::cout.width(35); std::cout << std::left << " + Rescaled processed map: "; std::cout << fn_tmp << std::endl;
 	}
 }
 
