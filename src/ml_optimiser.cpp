@@ -230,7 +230,7 @@ void MlOptimiser::parseContinue(int argc, char **argv)
         fn_mask2 = fnt;
 
     //Write_every_iter
-    write_every_iter = textToInteger(parser.getOption("--write_iter","Write out model every so many iterations (default is writing out all iters)","1")) 
+    write_every_iter = textToInteger(parser.getOption("--write_iter","Write out model every so many iterations (default is writing out all iters)","1")) ;
 	
     // These are still experimental; so not in the optimiser.star yet.
     fn_lowpass_mask = parser.getOption("--lowpass_mask", "User-provided mask for low-pass filtering", "None");
