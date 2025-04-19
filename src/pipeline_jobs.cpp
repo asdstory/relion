@@ -3657,7 +3657,7 @@ and \n\
 Jiang, Y., Jiang, J. The Bor1 elevator transport cycle is subject to autoinhibition and activation. Nat Commun 15, 9090 (2024). https://doi.org/10.1038/s41467-024-53411-1\n\
 \n\
 To use composite masks for membrane proteins, provide a regular reference mask, that covers the entire structure of both the protein(s) and the detergent micelle, \
-and a soft mask of protein of interest excluding the detergent micelle, and set a low-pass filter resolution. \n\	
+and a soft mask of protein of interest excluding the detergent micelle, and set a low-pass filter resolution.\n\	
 ");
 
         joboptions["low_pass_compoiste"] = JobOption("Composite low-pass filter (A) (optional):", -1, 1, 50, 1, "\
@@ -4192,7 +4192,7 @@ Thereby, for example, the higher density inside the virion may be set to a const
 Note that this second mask should have one-values inside the virion and zero-values in the capsid and the solvent areas. \
 To use a second mask, use the additional option --solvent_mask2, which may given in the Additional arguments line (in the Running tab).");
 
-        joboptions[] = JobOption("mask of protein of interest (optional):", LABEL_MASK_CPIPE, 1, "", "Image Files (*.{spi,vol,msk,mrc})", "\
+        joboptions["fn_protein_mask"] = JobOption("Mask of protein of interest (optional):", LABEL_MASK_CPIPE, 1, "", "Image Files (*.{spi,vol,msk,mrc})", "\
 Tight (soft) mask of the protein of interest.\n\
 \n\
 When this protein mask and the composite low-pass filter are provided, the voxels outside the protein mask and within the reference mask will be low-pass filtered. \
