@@ -229,7 +229,7 @@ void MlOptimiser::parseContinue(int argc, char **argv)
     if (fnt != "OLD")
         fn_mask2 = fnt;
 
-    //Write_every_iter
+    // Write_every_iter
     write_every_iter = textToInteger(parser.getOption("--write_iter","Write out model every so many iterations (default is writing out all iters)","1")) ;
 	
     // These are still experimental; so not in the optimiser.star yet.
@@ -5569,7 +5569,7 @@ void MlOptimiser::solventFlatten()
             Itmp *= Ilowpass();
             lowPassFilterMap(Itmp, lowpass, mymodel.pixel_size);
         }
-        if (fn_lowpass_mask_composite != "None" && lowpass >0.)
+        if (fn_lowpass_mask_composite != "None" && lowpass > 0.)
 	{
 	    Itmp_composite = mymodel.Iref[iclass];
 	    lowPassFilterMap(Itmp_composite, lowpass, mymodel.pixel_size);
