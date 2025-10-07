@@ -2209,6 +2209,7 @@ MetaDataTable removeDuplicatedParticles(MetaDataTable &MDin, EMDLabel mic_label,
 	if (fn_removed != "")
 		MDremoved.write(fn_removed);
 
+	long n_final = 0;
 	n_final = MDin.numberOfObjects() - n_removed;
 	std::cout << "Removed " << n_removed << " duplicated objects from " << MDin.numberOfObjects() << " objects." << std::endl;
 	std::cout << "We now have " << n_final << " objects in the final star file. " << std::endl;
