@@ -660,7 +660,8 @@ class star_handler_parameters
         }
 
         write_check_ignore_optics(MDout, fn_out, MDin0.getName());
-		std::cout << " Written: " << fn_out << " We now have " << nr_particles << " particles in this star file " << std::endl;
+		std::cout << " Written: " << fn_out << std::endl;
+		std::cout << " We now have " << nr_particles << " particles in this star file " << std::endl;
 	}
 
 	void combine_picks()
