@@ -623,6 +623,7 @@ class star_handler_parameters
 
         //Deactivate the group_name column
         MDout.deactivateLabel(EMDL_MLMODEL_GROUP_NO);
+		long int nr_particles = 0;
 
         if (fn_check != "")
         {
@@ -641,7 +642,6 @@ class star_handler_parameters
             }
             // sort on the label
             MDsort.newSort(label);
-			long int nr_particles = 0;
             long int nr_duplicates = 0;
             FOR_ALL_OBJECTS_IN_METADATA_TABLE(MDsort)
             {
