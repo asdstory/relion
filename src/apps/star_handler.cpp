@@ -641,10 +641,12 @@ class star_handler_parameters
             }
             // sort on the label
             MDsort.newSort(label);
+			long int nr_particles = 0;
             long int nr_duplicates = 0;
             FOR_ALL_OBJECTS_IN_METADATA_TABLE(MDsort)
             {
                 MDsort.getValue(label, fn_this);
+				nr_particles++;
                 if (fn_this == fn_prev)
                 {
                     nr_duplicates++;
@@ -658,7 +660,7 @@ class star_handler_parameters
         }
 
         write_check_ignore_optics(MDout, fn_out, MDin0.getName());
-		std::cout << " Written: " << fn_out << std::endl;
+		std::cout << " Written: " << fn_out << " We now have " << nr_particles << " particles in this star file " << std::endl;
 	}
 
 	void combine_picks()
