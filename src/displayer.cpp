@@ -265,8 +265,9 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 			}
 		}
 	}
+	*/
 }
-*/
+
 
 int DisplayBox::toggleSelect(int set_selected)
 {
