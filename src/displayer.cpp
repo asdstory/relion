@@ -188,8 +188,7 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 	// Use the same nearest-neighbor algorithm as in the copy function of Fl_Image...
 	if (ABS(scale - 1.0) > 0.01 && !do_relion_scale)
 	{
-		selfScaleToSize(img, xsize_data, ysize_data);
-/*		int xmod   = XSIZE(img) % xsize_data;
+		int xmod   = XSIZE(img) % xsize_data;
 		int xstep  = XSIZE(img) / xsize_data;
 		int ymod   = YSIZE(img) % ysize_data;
 		int ystep  = YSIZE(img) / ysize_data;
@@ -247,7 +246,6 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 				}
 			}
 		}
-*/
 	}
 	else
 	{
@@ -268,7 +266,6 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 		}
 	}
 }
-
 
 int DisplayBox::toggleSelect(int set_selected)
 {
