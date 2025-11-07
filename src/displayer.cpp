@@ -182,9 +182,9 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 
 	// For micrographs use relion-scaling to avoid bias in down-sampled positions
 	// For multi-image viewers, do not use this scaling as it is slower...
-/*	if (do_relion_scale && ABS(scale - 1.0) > 0.01)
-        selfScaleToSize(img, xsize_data, ysize_data);
-		
+	if (do_relion_scale && ABS(scale - 1.0) > 0.01)
+		selfScaleToSize(img, xsize_data, ysize_data);
+
 	// Use the same nearest-neighbor algorithm as in the copy function of Fl_Image...
 	if (ABS(scale - 1.0) > 0.01 && !do_relion_scale)
 	{
@@ -246,11 +246,6 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 				}
 			}
 		}
-*/
-	// For both micrographs and multi-image viewers, use relion-scaling to avoid bias in down-sampled positions
-	if (ABS(scale - 1.0) > 0.01)
-	{	
-		selfScaleToSize(img, xsize_data, ysize_data);
 	}
 	else
 	{
