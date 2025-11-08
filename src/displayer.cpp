@@ -167,6 +167,8 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 	ysize_data = CEIL(YSIZE(img) * scale);
 	xoff = (xsize_data < w() ) ? (w() - xsize_data) / 2 : 0;
 	yoff = (ysize_data < h() ) ? (h() - ysize_data) / 2 : 0;
+	img_data = new char [xsize_data * ysize_data];
+	/*
 	if (colour_scheme == GREYSCALE)
 	{
 		img_data = new unsigned char [xsize_data * ysize_data];
@@ -175,6 +177,7 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 	{
 		img_data = new unsigned char [3 * xsize_data * ysize_data];
 	}
+	*/
 	RFLOAT range = maxval - minval;
 	RFLOAT step = range / 255; // 8-bit scaling range from 0 to 255
 	RFLOAT* old_ptr=NULL;
@@ -195,6 +198,37 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 		int line_d = XSIZE(img);
 		int dx, dy, sy, xerr, yerr;
 
+				// scale the image using a nearest-neighbor algorithm...
+		for (dy = ysize_data, sy = 0, yerr = ysize_data, n = 0; dy > 0; dy --)
+		{
+			for (dx = xsize_data, xerr = xsize_data, old_ptr = img.data + sy * line_d; dx > 0; dx --, n++)
+			{
+				img_data[n] = (char)FLOOR((*old_ptr - minval) / step);
+				old_ptr += xstep;
+				xerr    -= xmod;
+				if (xerr <= 0)
+				{
+					xerr    += xsize_data;
+					old_ptr += 1;
+				}
+			}
+
+			sy   += ystep;
+			yerr -= ymod;
+			if (yerr <= 0)
+			{
+				yerr += ysize_data;
+				sy ++;
+			}
+		}
+
+	}
+	else
+	{
+		FOR_ALL_DIRECT_ELEMENTS_IN_MULTIDIMARRAY_ptr(img, n, old_ptr)
+		{
+    			img_data[n] = (char)FLOOR((*old_ptr - minval) / step);
+/*
 		if (colour_scheme == GREYSCALE)
 		{
 			for (dy = ysize_data, sy = 0, yerr = ysize_data, n = 0; dy > 0; dy --)
@@ -263,6 +297,7 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 				unsigned char val = FLOOR((*old_ptr - minval) / step);
 				greyToRGB(colour_scheme, val, img_data[3*n], img_data[3*n+1], img_data[3*n+2]);
 			}
+*/
 		}
 	}
 }
