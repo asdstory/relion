@@ -167,7 +167,7 @@ void DisplayBox::setData(MultidimArray<RFLOAT> &img, MetaDataContainer *MDCin, i
 	ysize_data = CEIL(YSIZE(img) * scale);
 	xoff = (xsize_data < w() ) ? (w() - xsize_data) / 2 : 0;
 	yoff = (ysize_data < h() ) ? (h() - ysize_data) / 2 : 0;
-	img_data = new char [xsize_data * ysize_data];
+	img_data = new unsigned char [xsize_data * ysize_data];
 	/*
 	if (colour_scheme == GREYSCALE)
 	{
