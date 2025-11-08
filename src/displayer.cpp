@@ -575,9 +575,9 @@ void basisViewerCanvas::fill(MetaDataTable &MDin, ObservationModel *obsModel, EM
 				}
 
 				if (lowpass > 0. && have_optics_group)
-					lowPassFilterMap(img(), lowpass, angpix);
+					lowPassFilterMap(img(), lowpass, 1.0);
 				if (highpass > 0. && have_optics_group)
-					highPassFilterMap(img(), highpass, angpix);
+					highPassFilterMap(img(), highpass, 1.0);
 
 				// Dont change the user-provided _minval and _maxval in the getImageContrast routine!
 				RFLOAT myminval = _minval;
